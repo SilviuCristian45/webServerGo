@@ -1,12 +1,40 @@
 [
     {
-        "brand":"hyundai",
-        "model":"elantra",
-        "yearReleased": 2020,
+        "brand": "hyundai",
+        "model": "kona",
+        "yearReleased": 2022,
         "options": [
-            {"name": "chair warmed", "cost":400 },
-            {"name": "start/stop system", "cost":700 },
-            {"name": "android auto/apple carplay system", "cost":900 }
+            {
+                "name": "chair warmed",
+                "cost": 100
+            },
+            {
+                "name": "start/stop system",
+                "cost": 200
+            },
+            {
+                "name": "android auto/apple carplay system",
+                "cost": 300
+            }
+        ]
+    },
+    {
+        "brand": "hyundai",
+        "model": "elantra",
+        "yearReleased": 2021,
+        "options": [
+            {
+                "name": "chair warmed",
+                "cost": 200
+            },
+            {
+                "name": "start/stop system",
+                "cost": 300
+            },
+            {
+                "name": "android auto/apple carplay system",
+                "cost": 340
+            }
         ]
     }
 ]
