@@ -19,6 +19,7 @@ type Car struct {
 	Model        string   `json:"model"`
 	YearReleased int64    `json:"yearReleased"`
 	Options      []Option `json:"options"`
+	Image        *string  `json:"image"`
 }
 
 type Option struct {

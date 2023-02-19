@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 )
 
 var carQueue Queue = Queue{data: []Car{}}
@@ -33,7 +34,13 @@ func getCars(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(500)
 	}
 
-	fmt.Println(carQueue)
+	isSorted := req.URL.Query().Get("isSorted")
+
+	if isSorted == "true" {
+		sort.Slice(cars, func(i, j int) bool {
+			return cars[i].YearReleased < cars[j].YearReleased
+		})
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(cars)
@@ -63,9 +70,21 @@ func addCar(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(cars)
 }
 
+func getCarImage(w http.ResponseWriter, req *http.Request) {
+	imageName := req.URL.Query().Get("image")
+	fileBytes, err := ioutil.ReadFile(fmt.Sprintf("../images/%s", imageName))
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Write(fileBytes)
+}
+
 func handleRoutes() {
 	http.HandleFunc("/", getCars)
 	http.HandleFunc("/addCar", addCar)
+	http.HandleFunc("/files", getCarImage)
 }
 
 func main() {

@@ -16,6 +16,26 @@
                 "name": "android auto/apple carplay system",
                 "cost": 300
             }
+        ],
+        "image": "kona23.jpg"
+    },
+    {
+        "brand": "hyundai",
+        "model": "elantra",
+        "yearReleased": 2021,
+        "options": [
+            {
+                "name": "chair warmed",
+                "cost": 200
+            },
+            {
+                "name": "start/stop system",
+                "cost": 300
+            },
+            {
+                "name": "android auto/apple carplay system",
+                "cost": 340
+            }
         ]
     },
     {
