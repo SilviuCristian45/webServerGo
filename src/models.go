@@ -1,9 +1,3 @@
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse and unparse this JSON data, add this code to your project and do:
-//
-//    cars, err := UnmarshalCars(bytes)
-//    bytes, err = cars.Marshal()
-
 package main
 
 import "encoding/json"
