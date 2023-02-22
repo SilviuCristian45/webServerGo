@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strconv"
 )
 
 var carQueue Queue = Queue{data: []Car{}}
@@ -56,7 +57,7 @@ func addCar(w http.ResponseWriter, req *http.Request) {
 	var cars Cars
 	var data, error = processCars("cars")
 	if error != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(500)  
 	}
 	var err = json.Unmarshal(data, &cars)
 	if err != nil {
@@ -81,10 +82,33 @@ func getCarImage(w http.ResponseWriter, req *http.Request) {
 	w.Write(fileBytes)
 }
 
+func getCarByYear(w http.ResponseWriter, req *http.Request) {
+	year := req.URL.Query().Get("year")
+	var cars Cars
+	var data, error = processCars("cars")
+	if error != nil {
+		w.WriteHeader(500)
+	}
+	var err = json.Unmarshal(data, &cars)
+	if err != nil {
+		log.Fatalf("Error when parsing json to Cars model %s", err)
+		w.WriteHeader(500)
+	}
+	var yearCars = map[int]Cars{}
+	for i := 0; i < len(cars); i++ {
+		yearCars[int(cars[i].YearReleased)] = append(yearCars[int(cars[i].YearReleased)], cars[i])
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	result, err := strconv.ParseUint(year, 10, 32)
+	json.NewEncoder(w).Encode(yearCars[int(result)])
+}
+
 func handleRoutes() {
 	http.HandleFunc("/", getCars)
 	http.HandleFunc("/addCar", addCar)
 	http.HandleFunc("/files", getCarImage)
+	http.HandleFunc("/cars", getCarByYear)
 }
 
 func main() {
