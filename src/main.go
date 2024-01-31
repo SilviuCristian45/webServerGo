@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 )
@@ -15,7 +15,7 @@ var carQueue Queue = Queue{data: []Car{}}
 
 func processCars(jsonFile string) ([]byte, error) {
 	// read file
-	data, err := ioutil.ReadFile(fmt.Sprintf("../%s.json", "cars"))
+	data, err := os.ReadFile(fmt.Sprintf("../%s.json", "cars"))
 	if err != nil {
 		log.Fatalf("Error when reading json from db %s", err)
 		return nil, err
@@ -57,7 +57,7 @@ func addCar(w http.ResponseWriter, req *http.Request) {
 	var cars Cars
 	var data, error = processCars("cars")
 	if error != nil {
-		w.WriteHeader(500)  
+		w.WriteHeader(500)
 	}
 	var err = json.Unmarshal(data, &cars)
 	if err != nil {
@@ -66,14 +66,14 @@ func addCar(w http.ResponseWriter, req *http.Request) {
 	}
 	cars = append(cars, newCar)
 	carsBytes, _ := json.Marshal(cars)
-	ioutil.WriteFile("../cars.json", carsBytes, fs.ModeAppend)
+	os.WriteFile("../cars.json", carsBytes, fs.ModeAppend)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(cars)
 }
 
 func getCarImage(w http.ResponseWriter, req *http.Request) {
 	imageName := req.URL.Query().Get("image")
-	fileBytes, err := ioutil.ReadFile(fmt.Sprintf("../images/%s", imageName))
+	fileBytes, err := os.ReadFile(fmt.Sprintf("../images/%s", imageName))
 	if err != nil {
 		panic(err)
 	}
@@ -96,7 +96,8 @@ func getCarByYear(w http.ResponseWriter, req *http.Request) {
 	}
 	var yearCars = map[int]Cars{}
 	for i := 0; i < len(cars); i++ {
-		yearCars[int(cars[i].YearReleased)] = append(yearCars[int(cars[i].YearReleased)], cars[i])
+		yearReleased := int(cars[i].YearReleased)
+		yearCars[yearReleased] = append(yearCars[yearReleased], cars[i])
 	}
 
 	w.Header().Set("Content-Type", "application/json")
